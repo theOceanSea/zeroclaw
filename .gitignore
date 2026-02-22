@@ -29,3 +29,8 @@ venv/
 *.pem
 credentials.json
 .worktrees/
+
+# Chat app
+chat/node_modules/
+chat/.wrangler/
+chat/dist/
