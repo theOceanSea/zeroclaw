@@ -31,3 +31,6 @@ Dockerfile* text eol=lf
 *.dll binary
 *.exe binary
 *.a binary
+
+# Cross-compiled release binaries
+output/zeroclaw binary
