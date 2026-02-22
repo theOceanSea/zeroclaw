@@ -162,6 +162,13 @@ jobs:
                       linker_env: CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER
                       linker: aarch64-linux-gnu-gcc
                     - os: ubuntu-latest
+                      target: arm-unknown-linux-gnueabihf
+                      artifact: zeroclaw
+                      archive_ext: tar.gz
+                      cross_compiler: gcc-arm-linux-gnueabihf
+                      linker_env: CARGO_TARGET_ARM_UNKNOWN_LINUX_GNUEABIHF_LINKER
+                      linker: arm-linux-gnueabihf-gcc
+                    - os: ubuntu-latest
                       target: armv7-unknown-linux-gnueabihf
                       artifact: zeroclaw
                       archive_ext: tar.gz
@@ -229,19 +236,21 @@ jobs:
               if: runner.os != 'Windows'
               run: |
                   cd target/${{ matrix.target }}/release-fast
-                  tar czf ../../../zeroclaw-${{ matrix.target }}.${{ matrix.archive_ext }} ${{ matrix.artifact }}
+                  mkdir -p ../../../output/zeroclaw
+                  tar czf ../../../output/zeroclaw/zeroclaw-${{ matrix.target }}.${{ matrix.archive_ext }} ${{ matrix.artifact }}
 
             - name: Package (Windows)
               if: runner.os == 'Windows'
               run: |
                   cd target/${{ matrix.target }}/release-fast
-                  7z a ../../../zeroclaw-${{ matrix.target }}.${{ matrix.archive_ext }} ${{ matrix.artifact }}
+                  powershell -Command "New-Item -ItemType Directory -Path output/zeroclaw -Force | Out-Null"
+                  7z a ../../../output/zeroclaw/zeroclaw-${{ matrix.target }}.${{ matrix.archive_ext }} ${{ matrix.artifact }}
 
             - name: Upload artifact
               uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
               with:
                   name: zeroclaw-${{ matrix.target }}
-                  path: zeroclaw-${{ matrix.target }}.${{ matrix.archive_ext }}
+                  path: output/zeroclaw/zeroclaw-${{ matrix.target }}.${{ matrix.archive_ext }}
                   retention-days: 7
 
     verify-artifacts:
@@ -261,6 +270,7 @@ jobs:
                   expected=(
                     "zeroclaw-x86_64-unknown-linux-gnu.tar.gz"
                     "zeroclaw-aarch64-unknown-linux-gnu.tar.gz"
+                    "zeroclaw-arm-unknown-linux-gnueabihf.tar.gz"
                     "zeroclaw-armv7-unknown-linux-gnueabihf.tar.gz"
                     "zeroclaw-x86_64-apple-darwin.tar.gz"
                     "zeroclaw-aarch64-apple-darwin.tar.gz"
