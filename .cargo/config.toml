@@ -3,3 +3,8 @@ rustflags = ["-C", "link-arg=-static"]
 
 [target.aarch64-unknown-linux-musl]
 rustflags = ["-C", "link-arg=-static"]
+
+[target.arm-unknown-linux-gnueabihf]
+# Cross-compiler from dockcross/linux-armv6 (armv6-unknown-linux-gnueabihf-gcc, GCC 11.3)
+# Required: docker run dockcross/linux-armv6 with /usr/xcc/armv6-unknown-linux-gnueabihf/bin in PATH
+linker = "armv6-unknown-linux-gnueabihf-gcc"
